@@ -33,14 +33,14 @@ export default function Home() {
     console.log(`Error getting Entries for ${contentType.name}.`);
   }
 
-  const [brands, setBrands] = useState([]);
+  const [contentfulEntries, setContentfulEntries] = useState([]);
 
   useEffect(() => {
-    async function getBrands() {
-      const allBrands = await fetchEntries();
-      setBrands([...allBrands]);
+    async function getContentfulEntries() {
+      const allContentfulEntries = await fetchEntries();
+      setContentfulEntries([...allContentfulEntries]);
     }
-    getBrands();
+    getContentfulEntries();
   }, []);
 
   return (
@@ -71,8 +71,10 @@ export default function Home() {
           <span style={{ marginLeft: "0.5rem" }}>work?</span>
         </div>
         <div className={styles.contentfulItemsContainer}>
-          {brands.length > 0
-            ? brands.map(p => <pre>{JSON.stringify(p.fields, null, 2)}</pre>)
+          {contentfulEntries.length > 0
+            ? contentfulEntries
+                .filter(e => Boolean(e.fields.companyName))
+                .map(e => <pre>{JSON.stringify(e.fields, null, 2)}</pre>)
             : null}
         </div>
       </main>
