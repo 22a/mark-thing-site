@@ -15,7 +15,7 @@ export default function Home() {
       </Head>
 
       <main className={styles.main}>
-        <h1 className={styles.title}>Mark Thing site</h1>
+        <h1 className={styles.title}>Feature 4: Pink site</h1>
         <div className={styles.footer}>
           <span style={{ marginRight: "0.5rem" }}>How does</span>
           <Image
