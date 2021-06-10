@@ -1,9 +1,15 @@
 import Head from "next/head";
 import Image from "next/image";
 import styles from "../styles/Home.module.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+
+const client = require("contentful").createClient({
+  space: process.env.NEXT_PUBLIC_CONTENTFUL_SPACE_ID,
+  accessToken: process.env.NEXT_PUBLIC_CONTENTFUL_ACCESS_TOKEN
+});
 
 export default function Home() {
+  // SMALL PIECE OF LOCAL STATE, UPDATED FROM API ENDPOINT
   const [randomNumber, setRandomNumber] = useState(0);
 
   const generateNewRandomNumber = _clickEvent => {
@@ -18,6 +24,24 @@ export default function Home() {
         }
       );
   };
+
+  // SOME EXAMPLE NONSENSE CONTENT FROM CONTENTFUL
+
+  async function fetchEntries() {
+    const entries = await client.getEntries();
+    if (entries.items) return entries.items;
+    console.log(`Error getting Entries for ${contentType.name}.`);
+  }
+
+  const [brands, setBrands] = useState([]);
+
+  useEffect(() => {
+    async function getBrands() {
+      const allBrands = await fetchEntries();
+      setBrands([...allBrands]);
+    }
+    getBrands();
+  }, []);
 
   return (
     <div className={styles.container}>
@@ -45,6 +69,11 @@ export default function Home() {
             className={styles.logo}
           />
           <span style={{ marginLeft: "0.5rem" }}>work?</span>
+        </div>
+        <div className={styles.contentfulItemsContainer}>
+          {brands.length > 0
+            ? brands.map(p => <pre>{JSON.stringify(p.fields, null, 2)}</pre>)
+            : null}
         </div>
       </main>
     </div>
